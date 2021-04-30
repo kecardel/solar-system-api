@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response
+from flask import Blueprint, make_response, jsonify
 from app.models.planet import Planet
 from flask import request
 from app import db
@@ -17,5 +17,16 @@ def add_planet():
 
     return make_response(f"Planet {new_planet.name} has been added.", 201)
 
-# @planets_bp.route("", methods=["GET"], strict_slashes=False)
-# def get_planets():
+@planets_bp.route("", methods=["GET"], strict_slashes=False)
+def get_planets():
+    planets = Planet.query.all()
+    planets_response = []
+    for planet in planets:
+        planets_response.append({
+            "id": planet.id,
+            "name": planet.name,
+            "description": planet.description,
+            "type": planet.type
+        })
+    return jsonify(planets_response)
+
