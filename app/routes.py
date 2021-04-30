@@ -30,3 +30,19 @@ def get_planets():
         })
     return jsonify(planets_response)
 
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def get_one_planet(planet_id):
+    try:
+        planet = Planet.query.get(int(planet_id))
+
+        return {
+        "id": planet.id,
+        "name": planet.name,
+        "description": planet.description,
+        "type": planet.type
+    }
+    except AttributeError:
+        return f"Planet ID is invalid.", 404
+
+    except ValueError:
+        return f"Planet ID must be an integer.", 404
