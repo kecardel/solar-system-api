@@ -34,9 +34,21 @@ def get_planets():
 
 def get_one_planet(planet_id):
 
-    planet = Planet.query.get(int(planet_id))
+    try:
 
-    if request.method == "GET":
+        planet = Planet.query.get(int(planet_id))
+    
+    # except AttributeError...not attribute error, this is getting thrown later in the code.
+
+    except ValueError:
+
+        return make_response(f"Planet ID must be an integer.", 404)
+
+    if planet == None:
+        return make_response(f"Planet ID is invalid.", 404)
+
+
+    elif request.method == "GET":
 
         return {
         "id": planet.id,
@@ -44,12 +56,7 @@ def get_one_planet(planet_id):
         "description": planet.description,
         "type": planet.type
     }
-    # except AttributeError:
-    #     return f"Planet ID is invalid.", 404
 
-    # except ValueError:
-    #     return f"Planet ID must be an integer.", 404
-    
     elif request.method == "PUT":
         form_data = request.get_json()
 
