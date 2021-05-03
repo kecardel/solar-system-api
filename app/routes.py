@@ -30,10 +30,13 @@ def get_planets():
         })
     return jsonify(planets_response)
 
-@planets_bp.route("/<planet_id>", methods=["GET"])
+@planets_bp.route("/<planet_id>", methods=["GET", "PUT", "DELETE"])
+
 def get_one_planet(planet_id):
-    try:
-        planet = Planet.query.get(int(planet_id))
+
+    planet = Planet.query.get(int(planet_id))
+
+    if request.method == "GET":
 
         return {
         "id": planet.id,
@@ -41,8 +44,24 @@ def get_one_planet(planet_id):
         "description": planet.description,
         "type": planet.type
     }
-    except AttributeError:
-        return f"Planet ID is invalid.", 404
+    # except AttributeError:
+    #     return f"Planet ID is invalid.", 404
 
-    except ValueError:
-        return f"Planet ID must be an integer.", 404
+    # except ValueError:
+    #     return f"Planet ID must be an integer.", 404
+    
+    elif request.method == "PUT":
+        form_data = request.get_json()
+
+        planet.name = form_data["name"]
+        planet.description = form_data["description"]
+        planet.type = form_data["type"]
+
+        db.session.commit()
+
+        return make_response(f"Planet #{planet.id} successfully updated") 
+
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response(f"Book #{planet.id} successfully deleted")
