@@ -24,6 +24,20 @@ def two_saved_planets(app):
                 name="Jupiter",
                 description="Largest planet in our solar system",
                 type="So much GAS THO")
-    db.session.add_all([jupiter])
+    
+    saturn = Planet(id=2,
+                    name="Saturn",
+                    description="The rings one, duh.",
+                    type="gas giant")
+
+    db.session.add_all([jupiter,saturn])
 
     db.session.commit()
+
+@pytest.fixture
+def planet_data(app):
+    return {
+        "name": "Paper",
+        "description": "Funniest planet",
+        "type": "C15"
+    }
