@@ -38,8 +38,6 @@ def get_one_planet(planet_id):
 
         planet = Planet.query.get(int(planet_id))
     
-    # except AttributeError...not attribute error, this is getting thrown later in the code.
-
     except ValueError:
 
         return make_response(f"Planet ID must be an integer.", 404)
