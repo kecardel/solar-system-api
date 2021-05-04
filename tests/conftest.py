@@ -18,4 +18,12 @@ def app():
 def client(app):
     return app.test_client()
 
+@pytest.fixture
+def two_saved_planets(app):
+    jupiter = Planet(id=1,
+                name="Jupiter",
+                description="Largest planet in our solar system",
+                type="So much GAS THO")
+    db.session.add_all([jupiter])
 
+    db.session.commit()
